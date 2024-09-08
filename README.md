@@ -1,7 +1,6 @@
 # iNotebook
 
 ![MERN Stack](https://img.shields.io/badge/Stack-MERN-blue)
-![License](https://img.shields.io/badge/License-MIT-green)
 ![React](https://img.shields.io/badge/React-v18.2.0-blue)
 ![Express](https://img.shields.io/badge/Express-v4.18.2-lightgrey)
 
