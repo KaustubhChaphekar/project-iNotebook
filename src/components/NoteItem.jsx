@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
+import { AiOutlineClose } from "react-icons/ai"; // Import close icon
 
 const NoteItem = (props) => {
   const { note, onEdit, onDelete } = props;
-  const [isExpanded, setIsExpanded] = useState(false); 
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
 
-  // Toggle expand/collapse state
-  const handleToggleExpand = () => {
-    setIsExpanded(!isExpanded);
+
+  // Toggle modal state
+  const handleModalToggle = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
   return (
-    <div className="max-w-xl w-full flex flex-col border border-gray-400 bg-white rounded-md shadow-md p-4 mb-4">
+    <div className="relative max-w-xl w-full flex flex-col border border-gray-400 bg-white rounded-md shadow-md p-4 mb-4">
       <div className="flex justify-between items-center">
         <h1
-          className="text-gray-900 font-bold text-lg md:text-xl mb-2 cursor-pointer"
-          onClick={handleToggleExpand}
+          className="text-gray-900 font-bold text-lg md:text-xl mb-2 cursor-pointer overflow-hidden"
+          onClick={handleModalToggle}
         >
           {note.title}
         </h1>
@@ -36,20 +38,36 @@ const NoteItem = (props) => {
         </div>
       </div>
       <div
-        className={`transition-max-height duration-300 ease-in-out overflow-hidden ${isExpanded ? 'max-h-96' : 'max-h-16'}`}
+        className={`transition-max-height duration-300 ease-in-out overflow-hidden`}
       >
         <p className="text-gray-700 text-sm md:text-base mb-2">
           {note.description}
         </p>
       </div>
-      {/* 'Read More' or 'Read Less' Button */}
-      {(note.description.length > 50) && ( // Adjusted condition to 50 characters
+      {/* 'Read More' Button */}
+      {(note.description.length || note.title.length > 50) && (
         <button
           className="text-blue-500 hover:underline text-sm mt-2"
-          onClick={handleToggleExpand}
+          onClick={handleModalToggle} // Open modal on 'Read More' click
         >
-          {isExpanded ? 'Read Less' : 'Read More'}
+          Read More
         </button>
+      )}
+
+      {/* Modal Component */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/2 p-6 relative max-h-[80vh] overflow-y-auto">
+            <button
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
+              onClick={handleModalToggle}
+            >
+              <AiOutlineClose size={24} />
+            </button>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4 break-words" >{note.title}</h2>
+            <p className="text-gray-700 text-base break-words">{note.description}</p>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -83,9 +83,9 @@ const Notes = () => {
                         />
                         <h2 className="text-lg font-bold">Your Notes</h2>
                         {filteredNotes.length === 0 && <p>No notes to display</p>}
-                        <div className='p-4 max-h-75 overflow-auto border border-gray-300 rounded-md'>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-y-auto max-h-[31rem]">
                             {filteredNotes.map((note) => (
-                                <div key={note._id} className="mb-4">
+                                <div key={note._id}>
                                     <NoteItem
                                         note={note}
                                         onEdit={startEdit}
