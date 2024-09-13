@@ -1,16 +1,14 @@
 const mongoose = require('mongoose');
+const { MONGODB_URI } = process.env;
 
-// Use environment variable for MongoDB URI
-const mongoURI = process.env.MONGODB_URI || "";
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-const connectToMongo = async () => {
-    try {
-        await mongoose.connect(mongoURI);
-        console.log('Connected to MongoDB successfully');
-    } catch (error) {
-        console.error('Failed to connect to MongoDB', error);
-        process.exit(1); // Exit the process with failure
-    }
-};
+const db = mongoose.connection;
 
-module.exports = connectToMongo;
+db.on('error', (error) => {
+  console.error(error);
+});
+
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
