@@ -12,3 +12,5 @@ db.on('error', (error) => {
 db.once('open', () => {
   console.log('Connected to MongoDB');
 });
+
+module.exports = { connectToMongo };
