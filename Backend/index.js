@@ -8,10 +8,7 @@ const app = express()
 const port = 3000
 
 app.use(express.json())
-app.use(cors({
-  origin: "https://inotebook-vya3.onrender.com", // Replace with your actual frontend domain
-  credentials: true, // Allow credentials to be included in requests
-}));
+app.use(cors());
 
 
 app.use('/api/auth',require('./routes/auth'))
