@@ -4,7 +4,7 @@ import { NoteContext } from "./NoteContext";
 
 const NoteState = (props) => {
 
-  const host = "http://localhost:3000"
+  const host = "https://inotebook-vya3.onrender.com/"
   const [notes, setNotes] = useState([])
 
   //Get All Notes 
@@ -52,7 +52,7 @@ const NoteState = (props) => {
       body: JSON.stringify({ title, description, tag })
     });
   
-    const json = await response.json(); // Fixed line
+    const json = await response.json(); 
 
     let newNotes = JSON.parse(JSON.stringify(notes))
     // Logic to edit in client

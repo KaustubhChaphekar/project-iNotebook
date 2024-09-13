@@ -22,7 +22,7 @@ const AuthPage = () => {
 
         let url = isLogin ? '/api/auth/login' : '/api/auth/createuser';
 
-        const response = await fetch(`http://localhost:3000${url}`, {
+        const response = await fetch(`https://inotebook-vya3.onrender.com/${url}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
