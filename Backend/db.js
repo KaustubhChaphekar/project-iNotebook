@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-const mongoURI = "mongodb://localhost:27017/inotebook?readPreference=primary";
+// Use environment variable for MongoDB URI
+const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/inotebook?readPreference=primary";
 
 const connectToMongo = async () => {
     try {
@@ -11,7 +12,9 @@ const connectToMongo = async () => {
         console.log('Connected to MongoDB successfully');
     } catch (error) {
         console.error('Failed to connect to MongoDB', error);
+        process.exit(1); // Exit the process with failure
     }
 };
 
 module.exports = connectToMongo;
+
