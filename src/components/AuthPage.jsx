@@ -1,29 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form'; // Import React Hook Form
 import { FaEnvelope, FaLock } from 'react-icons/fa'; // Import icons
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; // Import eye icons
 import Alert from './Alert';
 
 const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
-    const [credentials, setCredentials] = useState({ email: '', password: '', name: '', Cpassword: '' });
     const [alertMessage, setAlertMessage] = useState("");
     const [alertType, setAlertType] = useState("success");
     const [showPassword, setShowPassword] = useState(false); // State for showing password
     const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for showing confirm password
 
-    let navigate = useNavigate();
+    const navigate = useNavigate();
+    
+    // Initialize React Hook Form
+    const { register, handleSubmit, formState: { errors }, watch } = useForm();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const { name, email, password, Cpassword } = credentials;
+    const onSubmit = async (data) => {
+        const { name, email, password } = data;
 
         let url = isLogin ? '/api/auth/login' : '/api/auth/createuser';
-        if (!isLogin && password !== Cpassword) {
-            setAlertMessage("Passwords do not match");
-            setAlertType("error");
-            return;
-        }
 
         const response = await fetch(`http://localhost:3000${url}`, {
             method: "POST",
@@ -45,10 +42,6 @@ const AuthPage = () => {
             setAlertMessage(json.error || "Something went wrong");
             setAlertType("error");
         }
-    }
-
-    const handleChange = (e) => {
-        setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
 
     const handleAuthToggle = () => {
@@ -64,21 +57,19 @@ const AuthPage = () => {
                 </div>
             )}
             <div className="flex flex-col md:flex-row w-full">
-                <div className="w-full mt-44 md:mt-1  md:w-1/2 bg-gray-100 flex items-center justify-center p-6">
+                <div className="w-full mt-44 md:mt-1 md:w-1/2 bg-gray-100 flex items-center justify-center p-6">
                     <div className="w-full max-w-md">
                         <h2 className="text-3xl text-blue-700 font-bold mb-6 text-center">{isLogin ? 'Login' : 'Signup'}</h2>
-                        <form onSubmit={handleSubmit} className="space-y-6">
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                             {!isLogin && (
                                 <div>
                                     <label className="block text-gray-700">Name</label>
                                     <input
                                         type="text"
-                                        name="name"
-                                        value={credentials.name}
-                                        onChange={handleChange}
+                                        {...register("name", { required: "Name is required" })}
                                         className="w-full px-3 py-2 border rounded-md"
-                                        required
                                     />
+                                    {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
                                 </div>
                             )}
                             <div>
@@ -89,12 +80,13 @@ const AuthPage = () => {
                                     </span>
                                     <input
                                         type="email"
-                                        name="email"
-                                        value={credentials.email}
-                                        onChange={handleChange}
+                                        {...register("email", { 
+                                            required: "Email is required", 
+                                            pattern: { value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, message: "Invalid email address" }
+                                        })}
                                         className="w-full pl-10 px-3 py-2 border rounded-md"
-                                        required
                                     />
+                                    {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
                                 </div>
                             </div>
                             <div>
@@ -105,11 +97,8 @@ const AuthPage = () => {
                                     </span>
                                     <input
                                         type={showPassword ? "text" : "password"} // Toggle input type
-                                        name="password"
-                                        value={credentials.password}
-                                        onChange={handleChange}
+                                        {...register("password", { required: "Password is required", minLength: { value: 6, message: "Password must be at least 6 characters long" } })}
                                         className="w-full pl-10 px-3 py-2 border rounded-md"
-                                        required
                                     />
                                     <button
                                         type="button"
@@ -118,6 +107,7 @@ const AuthPage = () => {
                                     >
                                         {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                                     </button>
+                                    {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
                                 </div>
                             </div>
                             {!isLogin && (
@@ -129,11 +119,11 @@ const AuthPage = () => {
                                         </span>
                                         <input
                                             type={showConfirmPassword ? "text" : "password"} // Toggle input type for confirm password
-                                            name="Cpassword"
-                                            value={credentials.Cpassword}
-                                            onChange={handleChange}
+                                            {...register("Cpassword", { 
+                                                required: "Confirm password is required", 
+                                                validate: value => value === watch('password') || "Passwords do not match" 
+                                            })}
                                             className="w-full pl-10 px-3 py-2 border rounded-md"
-                                            required
                                         />
                                         <button
                                             type="button"
@@ -142,6 +132,7 @@ const AuthPage = () => {
                                         >
                                             {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                                         </button>
+                                        {errors.Cpassword && <p className="text-red-500 text-sm">{errors.Cpassword.message}</p>}
                                     </div>
                                 </div>
                             )}
