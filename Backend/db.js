@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // Use environment variable for MongoDB URI
 const mongoURI = process.env.MONGODB_URI || "";
 
-const connectToMongo = async () => {
+module.exports = async function connectToMongo() {
     try {
         await mongoose.connect(mongoURI);
         console.log('Connected to MongoDB successfully');
@@ -12,5 +12,3 @@ const connectToMongo = async () => {
         process.exit(1); // Exit the process with failure
     }
 };
-
-module.exports = connectToMongo;
