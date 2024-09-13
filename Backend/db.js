@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Use environment variable for MongoDB URI
-const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/inotebook?readPreference=primary";
+const mongoURI = process.env.MONGODB_URI|| "mongodb://localhost:27017/inotebook?readPreference=primary";
 
 const connectToMongo = async () => {
     try {

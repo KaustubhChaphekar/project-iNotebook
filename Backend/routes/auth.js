@@ -9,7 +9,7 @@ const { query, body, validationResult } = require('express-validator');
 
 
 // Route 1 : createa user using :POST "/api/auth/createuser" . Doesnt require auth
-const J_W_T = "Kaustubh@$%!*&^$#&&";
+const J_W_T = process.env.JWT_SECRET;
 
 
 
