@@ -4,7 +4,7 @@ import { NoteContext } from "./NoteContext";
 
 const NoteState = (props) => {
 
-  const host = "https://inotebook-vya3.onrender.com/"
+  const host = "https://inotebook-vya3.onrender.com"
   const [notes, setNotes] = useState([])
 
   //Get All Notes 
