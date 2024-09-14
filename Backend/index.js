@@ -7,8 +7,16 @@ connectToMongo();
 const app = express()
 const port = 3000
 
+const corsOptions = {
+  origin: 'https://project-inotebook.onrender.com', // Your frontend domain
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+};
+
+app.options('*', cors(corsOptions)); // Enable pre-flight requests for all routes
+
+
 app.use(express.json())
-app.use(cors());
 
 
 app.use('/api/auth',require('./routes/auth'))
