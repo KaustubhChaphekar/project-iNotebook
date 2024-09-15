@@ -1,6 +1,7 @@
 const connectToMongo = require("./db");
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config(); // Load environment variables from .env file
 
 connectToMongo();
@@ -13,7 +14,6 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization', 'auth-token'], // Allow auth-token header
 };
 
-const path = require('path');
 
 // Enable CORS for all routes
 app.use(cors(corsOptions));
