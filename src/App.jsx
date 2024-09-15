@@ -35,7 +35,9 @@ function App() {
       path: "/signup",
       element: <Layout><AuthPage /></Layout>,
     },
-  ]);
+  ],{
+    basename :process.env.FRONTEND_URL
+  });
 
   return (
     <NoteState>
