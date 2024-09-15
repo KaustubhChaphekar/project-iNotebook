@@ -22,7 +22,7 @@ const AuthPage = () => {
 
         let url = isLogin ? '/api/auth/login' : '/api/auth/createuser';
 
-        const response = await fetch(`${process.env.BACKEND_URL}+${url}`, {
+        const response = await fetch(`${process.env.BACKEND_URL}${url}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -46,7 +46,7 @@ const AuthPage = () => {
 
     const handleAuthToggle = () => {
         setIsLogin(!isLogin);
-        navigate(isLogin ? '/signup' : '/login', { replace: true }); // Update URL based on the current state
+        navigate(isLogin ? '/signup' : '/login'); // Update URL based on the current state
     };
 
     return (
