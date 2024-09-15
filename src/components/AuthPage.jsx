@@ -36,7 +36,7 @@ const AuthPage = () => {
             setAlertMessage(isLogin ? "Login successful!" : "Account created successfully!");
             setAlertType("success");
             setTimeout(() => {
-                navigate('/home');
+                navigate('/');
             }, 1000);
         } else {
             setAlertMessage(json.error || "Something went wrong");
