@@ -46,7 +46,7 @@ const AuthPage = () => {
 
     const handleAuthToggle = () => {
         setIsLogin(!isLogin);
-        navigate(isLogin ? '/login' : '/signup', { replace: true }); // Update URL based on the current state
+        navigate(isLogin ? '/signup' : '/login', { replace: true }); // Update URL based on the current state
     };
 
     return (
