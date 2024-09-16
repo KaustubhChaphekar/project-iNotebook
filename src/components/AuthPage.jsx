@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form'; // Import React Hook Form
 import { FaEnvelope, FaLock } from 'react-icons/fa'; // Import icons
+import { ImSpinner10 } from "react-icons/im";
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; // Import eye icons
 import Alert from './Alert';
 
@@ -11,42 +12,60 @@ const AuthPage = () => {
     const [alertType, setAlertType] = useState("success");
     const [showPassword, setShowPassword] = useState(false); // State for showing password
     const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for showing confirm password
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
-    
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+           navigate('/home');
+        }
+     }, [navigate]);
+     
+
     // Initialize React Hook Form
     const { register, handleSubmit, formState: { errors }, watch } = useForm();
 
     const onSubmit = async (data) => {
+        setLoading(true); // Start loading
         const { name, email, password } = data;
-
         let url = isLogin ? '/api/auth/login' : '/api/auth/createuser';
 
-        const response = await fetch(`https://inotebook-vya3.onrender.com${url}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ name, email, password })
-        });
+        try {
+            const response = await fetch(`https://inotebook-vya3.onrender.com${url}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name, email, password })
+            });
 
-        const json = await response.json();
-        if (json.success) {
-            localStorage.setItem('token', json.authToken);
-            setAlertMessage(isLogin ? "Login successful!" : "Account created successfully!");
-            setAlertType("success");
-            setTimeout(() => {
-                navigate('/home');
-            }, 1000);
-        } else {
-            setAlertMessage(json.error || "Something went wrong");
+            const json = await response.json();
+
+            if (response.ok && json.success) {
+                localStorage.setItem('token', json.authToken);
+                setAlertMessage(isLogin ? "Login successful!" : "Account created successfully!");
+                setAlertType("success");
+                setTimeout(() => {
+                    navigate('/home');
+                }, 1000);
+            } else {
+                setAlertMessage(json.error || "Something went wrong");
+                setAlertType("error");
+            }
+        } catch (error) {
+            setAlertMessage("Network error, please try again later.");
             setAlertType("error");
+        } finally {
+            setLoading(false); // Stop loading
         }
     };
 
+
     const handleAuthToggle = () => {
         setIsLogin(!isLogin);
-        navigate(isLogin ? '/signup' : '/login'); // Update URL based on the current state
+        navigate(isLogin ? '/signup' : '/login');
     };
 
     return (
@@ -80,8 +99,8 @@ const AuthPage = () => {
                                     </span>
                                     <input
                                         type="email"
-                                        {...register("email", { 
-                                            required: "Email is required", 
+                                        {...register("email", {
+                                            required: "Email is required",
                                             pattern: { value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, message: "Invalid email address" }
                                         })}
                                         className="w-full pl-10 px-3 py-2 border rounded-md"
@@ -97,7 +116,14 @@ const AuthPage = () => {
                                     </span>
                                     <input
                                         type={showPassword ? "text" : "password"} // Toggle input type
-                                        {...register("password", { required: "Password is required", minLength: { value: 6, message: "Password must be at least 6 characters long" } })}
+                                        {...register("password", {
+                                            required: "Password is required",
+                                            minLength: { value: 6, message: "Password must be at least 6 characters long" },
+                                            pattern: {
+                                                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{6,}$/,
+                                                message: "Password must include at least 1 uppercase, 1 lowercase, 1 number, and 1 special character."
+                                            }
+                                        })}
                                         className="w-full pl-10 px-3 py-2 border rounded-md"
                                     />
                                     <button
@@ -119,9 +145,9 @@ const AuthPage = () => {
                                         </span>
                                         <input
                                             type={showConfirmPassword ? "text" : "password"} // Toggle input type for confirm password
-                                            {...register("Cpassword", { 
-                                                required: "Confirm password is required", 
-                                                validate: value => value === watch('password') || "Passwords do not match" 
+                                            {...register("Cpassword", {
+                                                required: "Confirm password is required",
+                                                validate: value => value === watch('password') || "Passwords do not match"
                                             })}
                                             className="w-full pl-10 px-3 py-2 border rounded-md"
                                         />
@@ -139,8 +165,9 @@ const AuthPage = () => {
                             <button
                                 type="submit"
                                 className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition ease-in-out duration-300"
+                                disabled={loading} // Disable button while loading
                             >
-                                {isLogin ? 'Login' : 'Signup'}
+                                {loading ? <span className="animate-spin"><ImSpinner10 className="w-5 h-5" /></span> : isLogin ? 'Login' : 'Signup'}
                             </button>
                         </form>
                         <div className="text-center mt-4">
