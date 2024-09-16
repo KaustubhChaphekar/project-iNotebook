@@ -13,7 +13,7 @@ const AuthPage = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for showing confirm password
 
     const navigate = useNavigate();
-    
+
     // Initialize React Hook Form
     const { register, handleSubmit, formState: { errors }, watch } = useForm();
 
@@ -29,6 +29,14 @@ const AuthPage = () => {
             },
             body: JSON.stringify({ name, email, password })
         });
+
+          // Check if the response is okay (e.g., not a 404)
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const data1 = await response.json(); // Make sure it's a valid JSON response
+        console.log(data1);
 
         const json = await response.json();
         if (json.success) {
@@ -80,8 +88,8 @@ const AuthPage = () => {
                                     </span>
                                     <input
                                         type="email"
-                                        {...register("email", { 
-                                            required: "Email is required", 
+                                        {...register("email", {
+                                            required: "Email is required",
                                             pattern: { value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, message: "Invalid email address" }
                                         })}
                                         className="w-full pl-10 px-3 py-2 border rounded-md"
@@ -119,9 +127,9 @@ const AuthPage = () => {
                                         </span>
                                         <input
                                             type={showConfirmPassword ? "text" : "password"} // Toggle input type for confirm password
-                                            {...register("Cpassword", { 
-                                                required: "Confirm password is required", 
-                                                validate: value => value === watch('password') || "Passwords do not match" 
+                                            {...register("Cpassword", {
+                                                required: "Confirm password is required",
+                                                validate: value => value === watch('password') || "Passwords do not match"
                                             })}
                                             className="w-full pl-10 px-3 py-2 border rounded-md"
                                         />
