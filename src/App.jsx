@@ -1,11 +1,10 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import About from "./components/About";
-import NoteState from './context/notes/NoteState.jsx';
-import AuthPage from './components/AuthPage.jsx';
+import NoteState from './context/notes/NoteState';
+import AuthPage from './components/AuthPage';
 
-// Layout Component to include Navbar
 const Layout = ({ children }) => (
   <>
     <Navbar />
@@ -13,30 +12,40 @@ const Layout = ({ children }) => (
   </>
 );
 
+const ProtectedRoute = ({ element }) => {
+  const isAuthenticated = !!localStorage.getItem('token');
+  return isAuthenticated ? element : <Navigate to="/login" />;
+};
+
+const AuthRedirect = ({ element }) => {
+  const isAuthenticated = !!localStorage.getItem('token');
+  return isAuthenticated ? <Navigate to="/home" /> : element;
+};
+
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout><Home /></Layout>,
+      element: <Layout><ProtectedRoute element={<Home />} /></Layout>,
     },
     {
       path: "/home",
-      element: <Layout><Home /></Layout>,
+      element: <Layout><ProtectedRoute element={<Home />} /></Layout>,
     },
     {
       path: "/about",
-      element: <Layout><About /></Layout>,
+      element: <Layout><ProtectedRoute element={<About />} /></Layout>,
     },
     {
       path: "/login",
-      element: <Layout><AuthPage /></Layout>,
+      element: <Layout><AuthRedirect element={<AuthPage />} /></Layout>,
     },
     {
       path: "/signup",
-      element: <Layout><AuthPage /></Layout>,
+      element: <Layout><AuthRedirect element={<AuthPage />} /></Layout>,
     },
-  ],{
-    basename :process.env.FRONTEND_URL
+  ], {
+    basename: process.env.REACT_APP_FRONTEND_URL || '/'
   });
 
   return (

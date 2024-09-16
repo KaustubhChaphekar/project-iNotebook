@@ -22,7 +22,7 @@ const AuthPage = () => {
 
         let url = isLogin ? '/api/auth/login' : '/api/auth/createuser';
 
-        const response = await fetch(`${process.env.BACKEND_URL}${url}`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}${url}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

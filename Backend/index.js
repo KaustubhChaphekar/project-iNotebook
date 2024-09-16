@@ -9,7 +9,7 @@ const app = express();
 const port = 3000;
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL, // Your frontend domain without the trailing slash
+  origin: process.env.REACT_APP_FRONTEND_URL, // Your frontend domain without the trailing slash
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
   allowedHeaders: ['Content-Type', 'Authorization', 'auth-token'], // Allow auth-token header
 };
@@ -29,10 +29,6 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 // Catch-all route to serve index.html for client-side routes handled by React Router
 app.get('*', (req, res) => {
-  if (req.url.startsWith('/api')) {
-    // If the URL starts with /api, let the API routes handle it
-    return next();
-  }
   res.sendFile(path.join(__dirname, 'dist', 'index.html')); 
 });
 
