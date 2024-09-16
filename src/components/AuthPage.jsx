@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form'; // Import React Hook Form
 import { FaEnvelope, FaLock } from 'react-icons/fa'; // Import icons
@@ -19,10 +19,10 @@ const AuthPage = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-           navigate('/home');
+            navigate('https://project-inotebook.onrender.com/home');
         }
-     }, [navigate]);
-     
+    }, [navigate]);
+
 
     // Initialize React Hook Form
     const { register, handleSubmit, formState: { errors }, watch } = useForm();
@@ -93,7 +93,7 @@ const AuthPage = () => {
                             )}
                             <div>
                                 <label className="block text-gray-700">Email</label>
-                                <div className="relative">
+                                <div className="relative min-h-[60px]">
                                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                                         <FaEnvelope />
                                     </span>
@@ -101,16 +101,24 @@ const AuthPage = () => {
                                         type="email"
                                         {...register("email", {
                                             required: "Email is required",
-                                            pattern: { value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, message: "Invalid email address" }
+                                            pattern: {
+                                                value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                                                message: "Invalid email address"
+                                            }
                                         })}
                                         className="w-full pl-10 px-3 py-2 border rounded-md"
                                     />
-                                    {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+                                    {errors.email && (
+                                        <p className="text-red-500 text-sm absolute -bottom-5 left-0">
+                                            {errors.email.message}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
+
                             <div>
                                 <label className="block text-gray-700">Password</label>
-                                <div className="relative">
+                                <div className="relative min-h-[60px]">
                                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                                         <FaLock />
                                     </span>
@@ -133,13 +141,13 @@ const AuthPage = () => {
                                     >
                                         {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                                     </button>
-                                    {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+                                    {errors.password && <p className="text-red-500 text-sm absolute -bottom-5 left-0">{errors.password.message}</p>}
                                 </div>
                             </div>
                             {!isLogin && (
                                 <div>
                                     <label className="block text-gray-700">Confirm Password</label>
-                                    <div className="relative">
+                                    <div className="relative min-h-[60px]">
                                         <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                                             <FaLock />
                                         </span>
@@ -158,7 +166,7 @@ const AuthPage = () => {
                                         >
                                             {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                                         </button>
-                                        {errors.Cpassword && <p className="text-red-500 text-sm">{errors.Cpassword.message}</p>}
+                                        {errors.Cpassword && <p className="text-red-500 text-sm absolute -bottom-5 left-0">{errors.Cpassword.message}</p>}
                                     </div>
                                 </div>
                             )}
