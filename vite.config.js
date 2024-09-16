@@ -4,13 +4,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
-    proxy: {
-      '/api': {
-        target: 'https://inotebook-vya3.onrender.com', 
-        changeOrigin: true,
-        secure: false,
-      },
-    },
+    historyApiFallback: true,
   },
   build: {
     outDir: 'dist',
