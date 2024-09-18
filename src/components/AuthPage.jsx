@@ -19,7 +19,7 @@ const AuthPage = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            navigate('https://project-inotebook.onrender.com/home');
+            navigate('/home');
         }
     }, [navigate]);
 
@@ -94,7 +94,7 @@ const AuthPage = () => {
                             <div>
                                 <label className="block text-gray-700">Email</label>
                                 <div className="relative min-h-[60px]">
-                                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    <span className="absolute bottom-[18px] top-0 left-0 flex items-center pl-3 text-gray-500">
                                         <FaEnvelope />
                                     </span>
                                     <input
@@ -109,7 +109,7 @@ const AuthPage = () => {
                                         className="w-full pl-10 px-3 py-2 border rounded-md"
                                     />
                                     {errors.email && (
-                                        <p className="text-red-500 text-sm absolute -bottom-5 left-0">
+                                        <p className="text-red-500 text-sm absolute top-11 -bottom-5 left-0">
                                             {errors.email.message}
                                         </p>
                                     )}
@@ -119,7 +119,7 @@ const AuthPage = () => {
                             <div>
                                 <label className="block text-gray-700">Password</label>
                                 <div className="relative min-h-[60px]">
-                                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    <span className="absolute bottom-[18px] left-0 flex items-center pl-3 text-gray-500">
                                         <FaLock />
                                     </span>
                                     <input
@@ -137,18 +137,18 @@ const AuthPage = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 focus:outline-none"
+                                        className="absolute bottom-[18px] right-0 flex items-center pr-3 text-gray-500 focus:outline-none"
                                     >
                                         {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                                     </button>
-                                    {errors.password && <p className="text-red-500 text-sm absolute -bottom-5 left-0">{errors.password.message}</p>}
+                                    {errors.password && <p className="text-red-500 text-sm absolute top-11  -bottom-5 left-0">{errors.password.message}</p>}
                                 </div>
                             </div>
                             {!isLogin && (
                                 <div>
                                     <label className="block text-gray-700">Confirm Password</label>
                                     <div className="relative min-h-[60px]">
-                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                        <span className="absolute  bottom-[18px] left-0 flex items-center pl-3 text-gray-500">
                                             <FaLock />
                                         </span>
                                         <input
@@ -166,7 +166,7 @@ const AuthPage = () => {
                                         >
                                             {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                                         </button>
-                                        {errors.Cpassword && <p className="text-red-500 text-sm absolute -bottom-5 left-0">{errors.Cpassword.message}</p>}
+                                        {errors.Cpassword && <p className="text-red-500 text-sm absolute top-11  -bottom-5 left-0">{errors.Cpassword.message}</p>}
                                     </div>
                                 </div>
                             )}
