@@ -5,6 +5,7 @@ import { FaEnvelope, FaLock } from 'react-icons/fa'; // Import icons
 import { ImSpinner10 } from "react-icons/im";
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; // Import eye icons
 import Alert from './Alert';
+import ThreeDotsSpinner from '../assets/ThreeDotSpinner';
 
 const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -118,10 +119,8 @@ const AuthPage = () => {
 
                             <div>
                                 <label className="block text-gray-700">Password</label>
-                                <div className="relative min-h-[60px]">
-                                    <span className="absolute bottom-[18px] left-0 flex items-center pl-3 text-gray-500">
-                                        <FaLock />
-                                    </span>
+                                <div className="mb-4 flex items-center relative">
+                                <FaLock className="mr-2 text-gray-500" />
                                     <input
                                         type={showPassword ? "text" : "password"} // Toggle input type
                                         {...register("password", {
@@ -134,23 +133,17 @@ const AuthPage = () => {
                                         })}
                                         className="w-full pl-10 px-3 py-2 border rounded-md"
                                     />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute bottom-[18px] right-0 flex items-center pr-3 text-gray-500 focus:outline-none"
-                                    >
-                                        {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-                                    </button>
-                                    {errors.password && <p className="text-red-500 text-sm absolute top-11  -bottom-5 left-0">{errors.password.message}</p>}
+                                    <span onClick={() => setShowPassword(!showPassword)} className="cursor-pointer ml-2">
+                                        {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                                    </span>
+                                    {errors.password && <p className="absolute text-red-500 text-xs mt-1">{errors.password.message}</p>}
                                 </div>
                             </div>
                             {!isLogin && (
                                 <div>
                                     <label className="block text-gray-700">Confirm Password</label>
-                                    <div className="relative min-h-[60px]">
-                                        <span className="absolute  bottom-[18px] left-0 flex items-center pl-3 text-gray-500">
-                                            <FaLock />
-                                        </span>
+                                    <div className="mb-4 flex items-center relative">
+                                        <FaLock className="mr-2 text-gray-500" />
                                         <input
                                             type={showConfirmPassword ? "text" : "password"} // Toggle input type for confirm password
                                             {...register("Cpassword", {
@@ -159,14 +152,10 @@ const AuthPage = () => {
                                             })}
                                             className="w-full pl-10 px-3 py-2 border rounded-md"
                                         />
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 focus:outline-none"
-                                        >
+                                        <span onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="cursor-pointer ml-2">
                                             {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-                                        </button>
-                                        {errors.Cpassword && <p className="text-red-500 text-sm absolute top-11  -bottom-5 left-0">{errors.Cpassword.message}</p>}
+                                        </span>
+                                        {errors.Cpassword && <p className="absolute text-red-500 text-xs mt-1">{errors.Cpassword.message}</p>}
                                     </div>
                                 </div>
                             )}
@@ -175,7 +164,7 @@ const AuthPage = () => {
                                 className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition ease-in-out duration-300"
                                 disabled={loading} // Disable button while loading
                             >
-                                {loading ? <span className="animate-spin"><ImSpinner10 className="w-5 h-5" /></span> : isLogin ? 'Login' : 'Signup'}
+                                {loading ? <ThreeDotsSpinner /> : isLogin ? 'Login' : 'Signup'}
                             </button>
                         </form>
                         <div className="text-center mt-4">

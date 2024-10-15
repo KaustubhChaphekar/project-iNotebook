@@ -45,7 +45,7 @@ const NoteItem = (props) => {
         </p>
       </div>
       {/* 'Read More' Button */}
-      {(note.description.length || note.title.length > 50) && (
+      {(note.description.length > 40 || note.title.length > 40) && (
         <button
           className="text-blue-500 hover:underline text-sm mt-2"
           onClick={handleModalToggle} // Open modal on 'Read More' click
@@ -56,18 +56,24 @@ const NoteItem = (props) => {
 
       {/* Modal Component */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/2 p-6 relative max-h-[80vh] overflow-y-auto">
-            <button
-              className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
-              onClick={handleModalToggle}
-            >
-              <AiOutlineClose size={24} />
-            </button>
-            <h2 className="text-2xl font-bold text-gray-800 mb-4 break-words" >{note.title}</h2>
-            <p className="text-gray-700 text-base break-words">{note.description}</p>
-          </div>
+        <div
+        className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50"
+        onClick={handleModalToggle} // Close modal on overlay click
+      >
+        <div
+          className="bg-white rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/2 p-6 relative max-h-[80vh] overflow-y-auto"
+          onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+        >
+          <button
+            className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
+            onClick={handleModalToggle}
+          >
+            <AiOutlineClose size={24} />
+          </button>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 break-words">{note.title}</h2>
+          <p className="text-gray-700 text-base break-words">{note.description}</p>
         </div>
+      </div>
       )}
     </div>
   );
