@@ -1,21 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; 
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form'; // Import React Hook Form
-import { FaEnvelope, FaLock } from 'react-icons/fa'; // Import icons
-import { ImSpinner10 } from "react-icons/im";
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; // Import eye icons
+import { useForm } from 'react-hook-form'; 
+import { FaEnvelope, FaLock } from 'react-icons/fa'; 
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; 
 import Alert from './Alert';
-import ThreeDotsSpinner from '../assets/ThreeDotSpinner';
+import ThreeDotsSpinner from './Spinner';
+import { ThemeContext } from '../context/notes/ThemeContext'; // Import Theme Context
 
 const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [alertMessage, setAlertMessage] = useState("");
     const [alertType, setAlertType] = useState("success");
-    const [showPassword, setShowPassword] = useState(false); // State for showing password
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for showing confirm password
+    const [showPassword, setShowPassword] = useState(false); 
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
+
+    // Access theme context
+    const { theme } = useContext(ThemeContext);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -24,12 +27,10 @@ const AuthPage = () => {
         }
     }, [navigate]);
 
-
-    // Initialize React Hook Form
     const { register, handleSubmit, formState: { errors }, watch } = useForm();
 
     const onSubmit = async (data) => {
-        setLoading(true); // Start loading
+        setLoading(true); 
         const { name, email, password } = data;
         let url = isLogin ? '/api/auth/login' : '/api/auth/createuser';
 
@@ -59,43 +60,49 @@ const AuthPage = () => {
             setAlertMessage("Network error, please try again later.");
             setAlertType("error");
         } finally {
-            setLoading(false); // Stop loading
+            setLoading(false); 
         }
     };
-
 
     const handleAuthToggle = () => {
         setIsLogin(!isLogin);
         navigate(isLogin ? '/signup' : '/login');
     };
 
+    // Theme-based styles
+    const inputThemeClass = theme === 'dark' 
+        ? 'bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500'
+        : 'bg-gray-100 text-black border-gray-300 focus:ring-blue-500 focus:border-blue-500';
+
     return (
-        <div className="flex min-h-screen">
+        <div className={`flex min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
             {alertMessage && (
                 <div className="fixed w-full top-12 left-0 flex justify-center z-50">
                     <Alert message={alertMessage} type={alertType} onClose={() => setAlertMessage("")} />
                 </div>
             )}
             <div className="flex flex-col md:flex-row w-full">
-                <div className="w-full mt-44 md:mt-1 md:w-1/2 bg-gray-100 flex items-center justify-center p-6">
+                <div className={`w-full mt-44 md:mt-1 md:w-1/2 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'} flex items-center justify-center p-6`}>
                     <div className="w-full max-w-md">
-                        <h2 className="text-3xl text-blue-700 font-bold mb-6 text-center">{isLogin ? 'Login' : 'Signup'}</h2>
+                        <h2 className={`text-3xl font-bold mb-6 text-center ${theme === 'dark' ? 'text-white' : 'text-blue-700'}`}>
+                            {isLogin ? 'Login' : 'Signup'}
+                        </h2>
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                             {!isLogin && (
                                 <div>
-                                    <label className="block text-gray-700">Name</label>
+                                    <label className="block">Name</label>
                                     <input
                                         type="text"
                                         {...register("name", { required: "Name is required" })}
-                                        className="w-full px-3 py-2 border rounded-md"
+                                        className={`w-full px-3 py-2 border rounded-md ${inputThemeClass}`}
                                     />
                                     {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
                                 </div>
                             )}
                             <div>
-                                <label className="block text-gray-700">Email</label>
+                                <label className="block">Email</label>
                                 <div className="relative min-h-[60px]">
-                                    <span className="absolute bottom-[18px] top-0 left-0 flex items-center pl-3 text-gray-500">
+                                    <span className="absolute bottom-[18px] top-0 left-0 flex items-center pl-3">
                                         <FaEnvelope />
                                     </span>
                                     <input
@@ -107,7 +114,7 @@ const AuthPage = () => {
                                                 message: "Invalid email address"
                                             }
                                         })}
-                                        className="w-full pl-10 px-3 py-2 border rounded-md"
+                                        className={`w-full pl-10 px-3 py-2 border rounded-md ${inputThemeClass}`}
                                     />
                                     {errors.email && (
                                         <p className="text-red-500 text-sm absolute top-11 -bottom-5 left-0">
@@ -118,11 +125,11 @@ const AuthPage = () => {
                             </div>
 
                             <div>
-                                <label className="block text-gray-700">Password</label>
+                                <label className="block">Password</label>
                                 <div className="mb-4 flex items-center relative">
-                                <FaLock className="mr-2 text-gray-500" />
+                                    <FaLock className="mr-2" />
                                     <input
-                                        type={showPassword ? "text" : "password"} // Toggle input type
+                                        type={showPassword ? "text" : "password"}
                                         {...register("password", {
                                             required: "Password is required",
                                             minLength: { value: 6, message: "Password must be at least 6 characters long" },
@@ -131,38 +138,21 @@ const AuthPage = () => {
                                                 message: "Password must include at least 1 uppercase, 1 lowercase, 1 number, and 1 special character."
                                             }
                                         })}
-                                        className="w-full pl-10 px-3 py-2 border rounded-md"
+                                        className={`w-full pl-10 px-3 py-2 border rounded-md ${inputThemeClass}`}
                                     />
                                     <span onClick={() => setShowPassword(!showPassword)} className="cursor-pointer ml-2">
-                                        {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                                        {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                                     </span>
-                                    {errors.password && <p className="absolute text-red-500 text-xs mt-1">{errors.password.message}</p>}
+                                    {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
                                 </div>
                             </div>
-                            {!isLogin && (
-                                <div>
-                                    <label className="block text-gray-700">Confirm Password</label>
-                                    <div className="mb-4 flex items-center relative">
-                                        <FaLock className="mr-2 text-gray-500" />
-                                        <input
-                                            type={showConfirmPassword ? "text" : "password"} // Toggle input type for confirm password
-                                            {...register("Cpassword", {
-                                                required: "Confirm password is required",
-                                                validate: value => value === watch('password') || "Passwords do not match"
-                                            })}
-                                            className="w-full pl-10 px-3 py-2 border rounded-md"
-                                        />
-                                        <span onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="cursor-pointer ml-2">
-                                            {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-                                        </span>
-                                        {errors.Cpassword && <p className="absolute text-red-500 text-xs mt-1">{errors.Cpassword.message}</p>}
-                                    </div>
-                                </div>
-                            )}
+
                             <button
                                 type="submit"
-                                className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition ease-in-out duration-300"
-                                disabled={loading} // Disable button while loading
+                                className={`w-full py-2 px-4 rounded-md transition ease-in-out duration-300 ${
+                                    theme === 'dark' ? 'bg-blue-700 hover:bg-blue-600 text-white' : 'bg-blue-500 hover:bg-blue-700 text-white'
+                                }`}
+                                disabled={loading}
                             >
                                 {loading ? <ThreeDotsSpinner /> : isLogin ? 'Login' : 'Signup'}
                             </button>
@@ -170,14 +160,14 @@ const AuthPage = () => {
                         <div className="text-center mt-4">
                             <button
                                 onClick={handleAuthToggle}
-                                className="text-blue-500 hover:underline"
+                                className={`hover:underline ${theme === 'dark' ? 'text-blue-400' : 'text-blue-500'}`}
                             >
                                 {isLogin ? 'Create an account' : 'Already have an account? Login'}
                             </button>
                         </div>
                     </div>
                 </div>
-                <div className="hidden md:flex pt-16 w-1/2 bg-blue-500 text-white justify-center items-center p-6">
+                <div className={`hidden md:flex pt-16 w-1/2 ${theme === 'dark' ? 'bg-gray-900' : 'bg-blue-500'} text-white justify-center items-center p-6`}>
                     <div className="text-center">
                         <h1 className="text-4xl font-bold mb-5">Welcome to the iNotebook</h1>
                         <div>
