@@ -230,7 +230,7 @@ const AuthPage = () => {
                 </div>
 
                 {/* Right Side - Text/Content */}
-                <div className="hidden md:flex w-1/2 bg-cover bg-center bg-no-repeat items-center justify-center" style={{ backgroundImage: "url('src/assets/Bg-rightSide.png')" }}>
+                <div className="hidden md:flex w-1/2 bg-cover bg-center bg-no-repeat items-center justify-center" style={{ backgroundImage: "url('/assets/Bg-rightSide.jpg')" }}>
 
                     <div className="relative text-white text-center p-6">
                         <h1 className="text-4xl font-bold mb-5 animate-pulse">Welcome to the iNotebook</h1>
