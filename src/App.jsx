@@ -4,6 +4,7 @@ import Home from "./components/Home";
 import About from "./components/About";
 import NoteState from './context/notes/NoteState';
 import AuthPage from './components/AuthPage';
+import  ThemeProvider  from './context/ThemeContext';
 
 const Layout = ({ children }) => (
   <>
@@ -45,13 +46,15 @@ function App() {
       element: <Layout><AuthRedirect element={<AuthPage />} /></Layout>,
     },
   ], {
-    basename: process.env.REACT_APP_FRONTEND_URL || '/'
+    basename: import.meta.env.REACT_APP_FRONTEND_URL || '/'
   });
 
   return (
-    <NoteState>
-      <RouterProvider router={router} />
-    </NoteState>
+    <ThemeProvider>
+      <NoteState>
+        <RouterProvider router={router} />
+      </NoteState>
+    </ThemeProvider>
   );
 }
 

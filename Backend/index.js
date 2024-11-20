@@ -9,7 +9,7 @@ const app = express()
 const port = 3000
 
 const corsOptions = {
-  origin: 'https://project-inotebook.onrender.com', // Your frontend domain
+  origin: process.env.REACT_APP_FRONTEND_URL || "http://localhost:5173", // Your frontend domain
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
   allowedHeaders: ['Content-Type', 'Authorization', 'auth-token'], // Allow auth-token header
 };

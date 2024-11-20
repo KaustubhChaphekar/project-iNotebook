@@ -1,10 +1,16 @@
-import React from 'react'
-import Loading from "../assets/loading.gif"
+import React from "react";
+import Loading from "../assets/spinner.gif";
 
-export const Spinner = () => {
+const Spinner = () => {
   return (
-    <div className='text-center'>
-        <img className='my-3 ' src={Loading} alt="Loading" />
+    <div >
+      <img
+        className="w-6 h-6 text-white" // Adjust size of the spinner here
+        src={Loading}
+        alt="Loading"
+      />
     </div>
-  )
-}
+  );
+};
+
+export default Spinner;

@@ -1,24 +1,32 @@
-import React, { useState, useEffect, useContext } from 'react'; 
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form'; 
-import { FaEnvelope, FaLock } from 'react-icons/fa'; 
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; 
+import { useForm } from 'react-hook-form';
+import { FaEnvelope, FaLock } from 'react-icons/fa';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import Alert from './Alert';
-import ThreeDotsSpinner from './Spinner';
-import { ThemeContext } from '../context/notes/ThemeContext'; // Import Theme Context
+import Spinner from './Spinner';
+import { ThemeContext } from '../context/ThemeContext'; // Import Theme Context
+import { FaPen, FaBook, FaLightbulb } from "react-icons/fa";
+
+const messages = [
+    "Conquer your day with organized notes!",
+    "Transform your ideas into actions.",
+    "Your thoughts deserve a home.",
+];
+
 
 const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [alertMessage, setAlertMessage] = useState("");
     const [alertType, setAlertType] = useState("success");
-    const [showPassword, setShowPassword] = useState(false); 
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [currentMessage, setCurrentMessage] = useState(messages[0]);
 
     const navigate = useNavigate();
+    const { theme } = useContext(ThemeContext); // Use theme context
 
-    // Access theme context
-    const { theme } = useContext(ThemeContext);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -27,41 +35,55 @@ const AuthPage = () => {
         }
     }, [navigate]);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentMessage((prev) => {
+                const nextIndex = (messages.indexOf(prev) + 1) % messages.length;
+                return messages[nextIndex];
+            });
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     const { register, handleSubmit, formState: { errors }, watch } = useForm();
 
     const onSubmit = async (data) => {
-        setLoading(true); 
-        const { name, email, password } = data;
-        let url = isLogin ? '/api/auth/login' : '/api/auth/createuser';
+        setLoading(true);
+        setTimeout(async () => {
+            const { name, email, password } = data;
+            let url = isLogin ? '/api/auth/login' : '/api/auth/createuser';
 
-        try {
-            const response = await fetch(`https://inotebook-vya3.onrender.com${url}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ name, email, password })
-            });
+            try {
+                const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+                const response = await fetch(`${backendUrl}${url}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ name, email, password })
+                });
 
-            const json = await response.json();
+                const json = await response.json();
 
-            if (response.ok && json.success) {
-                localStorage.setItem('token', json.authToken);
-                setAlertMessage(isLogin ? "Login successful!" : "Account created successfully!");
-                setAlertType("success");
-                setTimeout(() => {
-                    navigate('/home');
-                }, 1000);
-            } else {
-                setAlertMessage(json.error || "Something went wrong");
+                if (response.ok && json.success) {
+                    localStorage.setItem('token', json.authToken);
+                    setAlertMessage(isLogin ? "Login successful!" : "Account created successfully!");
+                    setAlertType("success");
+                    setTimeout(() => {
+                        navigate('/home');
+                    }, 1500);
+                } else {
+                    setAlertMessage(json.error || "Something went wrong");
+                    setAlertType("error");
+                }
+            } catch (error) {
+                setAlertMessage("Network error, please try again later.");
                 setAlertType("error");
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            setAlertMessage("Network error, please try again later.");
-            setAlertType("error");
-        } finally {
-            setLoading(false); 
-        }
+        }, 1000);
     };
 
     const handleAuthToggle = () => {
@@ -69,40 +91,41 @@ const AuthPage = () => {
         navigate(isLogin ? '/signup' : '/login');
     };
 
-    // Theme-based styles
-    const inputThemeClass = theme === 'dark' 
-        ? 'bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500'
-        : 'bg-gray-100 text-black border-gray-300 focus:ring-blue-500 focus:border-blue-500';
-
     return (
-        <div className={`flex min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
+        <div className={`flex min-h-screen ${theme === 'light' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-900'}`}>
             {alertMessage && (
                 <div className="fixed w-full top-12 left-0 flex justify-center z-50">
                     <Alert message={alertMessage} type={alertType} onClose={() => setAlertMessage("")} />
                 </div>
             )}
             <div className="flex flex-col md:flex-row w-full">
-                <div className={`w-full mt-44 md:mt-1 md:w-1/2 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'} flex items-center justify-center p-6`}>
+                {/* Left Side - Form */}
+                <div className="w-full mt-44 md:mt-1 md:w-1/2 bg-gradient-to-br from-yellow-300 to-blue-800 text-white flex items-center justify-center p-6 transition-transform transform duration-500 ease-in-out">
                     <div className="w-full max-w-md">
-                        <h2 className={`text-3xl font-bold mb-6 text-center ${theme === 'dark' ? 'text-white' : 'text-blue-700'}`}>
-                            {isLogin ? 'Login' : 'Signup'}
-                        </h2>
+                        <h2 className="text-3xl font-bold mb-6 text-center animate__animated animate__fadeIn">{isLogin ? 'Login' : 'Signup'}</h2>
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                            {/* Name Field */}
                             {!isLogin && (
-                                <div>
+                                <div className="transition-all duration-500 ease-in-out transform hover:scale-105">
                                     <label className="block">Name</label>
-                                    <input
-                                        type="text"
-                                        {...register("name", { required: "Name is required" })}
-                                        className={`w-full px-3 py-2 border rounded-md ${inputThemeClass}`}
-                                    />
-                                    {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+                                    <div className="mb-2">
+                                        <input
+                                            type="text"
+                                            {...register("name", { required: "Name is required" })}
+                                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+                                        />
+                                    </div>
+                                    <div className="min-h-[20px]">
+                                        {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+                                    </div>
                                 </div>
                             )}
-                            <div>
+
+                            {/* Email Field */}
+                            <div className="transition-all duration-500 ease-in-out transform hover:scale-105">
                                 <label className="block">Email</label>
-                                <div className="relative min-h-[60px]">
-                                    <span className="absolute bottom-[18px] top-0 left-0 flex items-center pl-3">
+                                <div className="relative mb-2">
+                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                                         <FaEnvelope />
                                     </span>
                                     <input
@@ -114,20 +137,21 @@ const AuthPage = () => {
                                                 message: "Invalid email address"
                                             }
                                         })}
-                                        className={`w-full pl-10 px-3 py-2 border rounded-md ${inputThemeClass}`}
+                                        className="w-full pl-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
                                     />
-                                    {errors.email && (
-                                        <p className="text-red-500 text-sm absolute top-11 -bottom-5 left-0">
-                                            {errors.email.message}
-                                        </p>
-                                    )}
+                                </div>
+                                <div className="min-h-[20px]">
+                                    {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
                                 </div>
                             </div>
 
-                            <div>
+                            {/* Password Field */}
+                            <div className="transition-all duration-500 ease-in-out transform hover:scale-105">
                                 <label className="block">Password</label>
-                                <div className="mb-4 flex items-center relative">
-                                    <FaLock className="mr-2" />
+                                <div className="relative mb-2">
+                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                                        <FaLock />
+                                    </span>
                                     <input
                                         type={showPassword ? "text" : "password"}
                                         {...register("password", {
@@ -138,43 +162,93 @@ const AuthPage = () => {
                                                 message: "Password must include at least 1 uppercase, 1 lowercase, 1 number, and 1 special character."
                                             }
                                         })}
-                                        className={`w-full pl-10 px-3 py-2 border rounded-md ${inputThemeClass}`}
+                                        className="w-full pl-10 pr-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
                                     />
-                                    <span onClick={() => setShowPassword(!showPassword)} className="cursor-pointer ml-2">
+                                    <span
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+                                    >
                                         {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                                     </span>
-                                    {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+                                </div>
+                                <div className="min-h-[20px]">
+                                    {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
                                 </div>
                             </div>
 
-                            <button
-                                type="submit"
-                                className={`w-full py-2 px-4 rounded-md transition ease-in-out duration-300 ${
-                                    theme === 'dark' ? 'bg-blue-700 hover:bg-blue-600 text-white' : 'bg-blue-500 hover:bg-blue-700 text-white'
-                                }`}
-                                disabled={loading}
-                            >
-                                {loading ? <ThreeDotsSpinner /> : isLogin ? 'Login' : 'Signup'}
-                            </button>
+                            {/* Confirm Password Field */}
+                            {!isLogin && (
+                                <div className="transition-all duration-500 ease-in-out transform hover:scale-105">
+                                    <label className="block">Confirm Password</label>
+                                    <div className="relative mb-2">
+                                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                                            <FaLock />
+                                        </span>
+                                        <input
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            {...register("Cpassword", {
+                                                required: "Confirm password is required",
+                                                validate: value => value === watch('password') || "Passwords do not match"
+                                            })}
+                                            className="w-full pl-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+                                        />
+                                        <span
+                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+                                        >
+                                            {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                                        </span>
+                                    </div>
+                                    <div className="min-h-[20px]">
+                                        {errors.Cpassword && <p className="text-red-500 text-sm">{errors.Cpassword.message}</p>}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Submit Button */}
+                            <div className=" transition-all duration-500 ease-in-out transform hover:scale-105">
+                                <button
+                                    type="submit"
+                                    className={`w-full flex justify-center items-center py-2 rounded-md bg-blue-500 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600 hover:bg-blue-600 transition duration-300`}
+                                    disabled={loading}
+                                >
+                                    {loading ? <Spinner /> : isLogin ? "Login" : "Signup"}
+                                </button>
+                            </div>
                         </form>
-                        <div className="text-center mt-4">
+
+                        {/* Toggle Between Login and Signup */}
+                        <div className="mt-6 text-center">
                             <button
                                 onClick={handleAuthToggle}
-                                className={`hover:underline ${theme === 'dark' ? 'text-blue-400' : 'text-blue-500'}`}
+                                className="text-white hover:text-blue-700"
                             >
-                                {isLogin ? 'Create an account' : 'Already have an account? Login'}
+                                {isLogin ? "Don't have an account? Sign up" : "Already have an account? Login"}
                             </button>
                         </div>
                     </div>
                 </div>
-                <div className={`hidden md:flex pt-16 w-1/2 ${theme === 'dark' ? 'bg-gray-900' : 'bg-blue-500'} text-white justify-center items-center p-6`}>
-                    <div className="text-center">
-                        <h1 className="text-4xl font-bold mb-5">Welcome to the iNotebook</h1>
-                        <div>
-                            <h2 className="text-2xl font-bold">{!isLogin ? "Join the Note-Taking Revolution!" : "Log In to Unleash Your Productivity"}</h2>
-                            <p className="mt-4">
-                                {!isLogin ? "Your thoughts deserve a safe home. Sign up to get started!" : "Ready to conquer the day? Your notes are just a click away."}
-                            </p>
+
+                {/* Right Side - Text/Content */}
+                <div className="hidden md:flex w-1/2 bg-cover bg-center bg-no-repeat items-center justify-center" style={{ backgroundImage: "url('src/assets/Bg-rightSide.png')" }}>
+
+                    <div className="relative text-white text-center p-6">
+                        <h1 className="text-4xl font-bold mb-5 animate-pulse">Welcome to the iNotebook</h1>
+                        <p className="mt-4 text-lg">
+                           {currentMessage}
+                        </p>
+
+
+                        <div className="flex justify-center mt-6 space-x-4">
+                            <div className="text-blue-500 text-4xl animate-bounce">
+                                <FaPen />
+                            </div>
+                            <div className="text-blue-500 text-4xl animate-bounce delay-150">
+                                <FaBook />
+                            </div>
+                            <div className="text-blue-500 text-4xl animate-bounce delay-300">
+                                <fa-lightbulb />
+                            </div>
                         </div>
                     </div>
                 </div>

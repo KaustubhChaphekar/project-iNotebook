@@ -79,7 +79,7 @@ const Notes = () => {
                             placeholder="Search notes..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="px-4 py-2 border rounded-md"
+                            className="px-4 py-2 text-blue-700 border rounded-md"
                         />
                         <h2 className="text-lg font-bold">Your Notes</h2>
                         {filteredNotes.length === 0 && <p>No notes to display</p>}

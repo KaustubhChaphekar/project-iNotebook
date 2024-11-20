@@ -4,7 +4,7 @@ import React, { createContext, useState, useEffect } from 'react';
 export const ThemeContext = createContext();
 
 // Theme provider
-export const ThemeProvider = ({ children }) => {
+ const ThemeProvider = ({ children }) => {
     const [theme, setTheme] = useState('light'); // Default to light theme
 
     // Load the theme from localStorage on initial render
@@ -28,3 +28,5 @@ export const ThemeProvider = ({ children }) => {
         </ThemeContext.Provider>
     );
 };
+
+export default ThemeProvider;

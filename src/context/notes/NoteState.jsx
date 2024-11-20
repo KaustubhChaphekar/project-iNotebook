@@ -4,7 +4,7 @@ import { NoteContext } from "./NoteContext";
 
 const NoteState = (props) => {
 
-  const host = "https://inotebook-vya3.onrender.com"
+  const host = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
   const [notes, setNotes] = useState([])
 
   //Get All Notes 

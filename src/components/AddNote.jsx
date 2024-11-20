@@ -33,7 +33,7 @@ const AddNote = ({ onAdd }) => {
     <div className="flex justify-center items-center m-6 bg-gray-750">
       <form
         onSubmit={handleSubmit(onSubmit)} // Use handleSubmit from react-hook-form
-        className="bg-white p-6 rounded-lg shadow-md w-full max-w-sm"
+        className="bg-white text-blue-700 p-6 rounded-lg shadow-md w-full max-w-sm"
       >
         <h2 className="text-2xl text-black font-bold mb-4">Add Note</h2>
 
