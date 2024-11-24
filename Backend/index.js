@@ -27,6 +27,10 @@ app.use('/api/notes', require('./routes/notes'))
 
 // Serve static files from the dist folder
 app.use(express.static(path.join(__dirname, 'dist')));
+console.log(path.join(__dirname, 'dist', 'index.html'));
+
+console.log('Static files served from:', path.join(__dirname, 'dist'));
+
 
 
 // Catch-all route to serve the index.html for any unknown routes
