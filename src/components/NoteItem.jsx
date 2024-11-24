@@ -14,7 +14,7 @@ const NoteItem = (props) => {
   };
 
   return (
-    <div className="relative max-w-xl w-full flex flex-col border border-gray-400 bg-white rounded-md shadow-md p-4 mb-4">
+    <div className="relative max-w-xl w-full flex flex-col border border-gray-400 bg-white rounded-lg shadow-lg p-4 mb-4">
       <div className="flex justify-between items-center">
         <h1
           className="text-gray-900 font-bold text-lg md:text-xl mb-2 cursor-pointer overflow-hidden"

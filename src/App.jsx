@@ -4,6 +4,7 @@ import Home from "./components/Home";
 import About from "./components/About";
 import NoteState from './context/notes/NoteState';
 import AuthPage from './components/AuthPage';
+import Contact from "./components/Contact";
 import  ThemeProvider  from './context/ThemeContext';
 
 const Layout = ({ children }) => (
@@ -36,6 +37,10 @@ function App() {
     {
       path: "/about",
       element: <Layout><ProtectedRoute element={<About />} /></Layout>,
+    },
+    {
+      path: "/contact",
+      element: <Layout><ProtectedRoute element={<Contact />} /></Layout>,
     },
     {
       path: "/login",

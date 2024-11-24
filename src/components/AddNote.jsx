@@ -33,7 +33,7 @@ const AddNote = ({ onAdd }) => {
     <div className="flex justify-center items-center m-6 bg-gray-750">
       <form
         onSubmit={handleSubmit(onSubmit)} // Use handleSubmit from react-hook-form
-        className="bg-white text-blue-700 p-6 rounded-lg shadow-md w-full max-w-sm"
+        className="bg-white text-white border-gray-200 rounded-lg p-6 shadow-sm w-full max-w-sm"
       >
         <h2 className="text-2xl text-black font-bold mb-4">Add Note</h2>
 
@@ -51,7 +51,7 @@ const AddNote = ({ onAdd }) => {
                 message: "Title must be at least 3 characters long",
               },
             })} // Register input for validation
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+            className={`w-full px-3 py-2 border rounded-md bg-black focus:outline-none focus:ring-2 focus:ring-blue-400 ${
               errors.title ? "border-red-500" : ""
             }`}
           />
@@ -73,8 +73,8 @@ const AddNote = ({ onAdd }) => {
                 message: "Description must be at least 5 characters long",
               },
             })} // Register textarea for validation
-            className={`w-full px-3 py-2 overflow-auto border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 ${
-              errors.description ? "border-red-500" : ""
+            className={`w-full px-3 py-2 overflow-auto border rounded-md focus:outline-none bg-black focus:ring-2 focus:ring-blue-400 ${
+              errors.description ? "border-red-500 " : ""
             }`}
           />
           {errors.description && (
@@ -90,7 +90,7 @@ const AddNote = ({ onAdd }) => {
             type="text"
             id="tag"
             {...register("tag")} // Register input without validation (optional field)
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 bg-black"
           />
         </div>
 

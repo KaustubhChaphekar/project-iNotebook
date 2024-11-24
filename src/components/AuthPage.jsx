@@ -100,10 +100,10 @@ const AuthPage = () => {
             )}
             <div className="flex flex-col md:flex-row w-full">
                 {/* Left Side - Form */}
-                <div className="w-full mt-44 md:mt-1 md:w-1/2 bg-gradient-to-br from-yellow-300 to-blue-800 text-white flex items-center justify-center p-6 transition-transform transform duration-500 ease-in-out">
+                <div className="w-full mt-44 md:mt-1 md:w-1/2 bg-gradient-to-r from-[#1e293b] to-[#1e3a8a] text-[#f7f7f7] flex items-center justify-center p-6 transition-transform transform duration-500 ease-in-out">
                     <div className="w-full max-w-md">
                         <h2 className="text-3xl font-bold mb-6 text-center animate__animated animate__fadeIn">{isLogin ? 'Login' : 'Signup'}</h2>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                        <form onSubmit={handleSubmit(onSubmit)} className=" space-y-6 text-[#ffffff] " >
                             {/* Name Field */}
                             {!isLogin && (
                                 <div className="transition-all duration-500 ease-in-out transform hover:scale-105">
@@ -112,7 +112,7 @@ const AuthPage = () => {
                                         <input
                                             type="text"
                                             {...register("name", { required: "Name is required" })}
-                                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+                                            className=" w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out bg-black"
                                         />
                                     </div>
                                     <div className="min-h-[20px]">
@@ -137,7 +137,7 @@ const AuthPage = () => {
                                                 message: "Invalid email address"
                                             }
                                         })}
-                                        className="w-full pl-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+                                        className="w-full pl-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out bg-black "
                                     />
                                 </div>
                                 <div className="min-h-[20px]">
@@ -162,7 +162,7 @@ const AuthPage = () => {
                                                 message: "Password must include at least 1 uppercase, 1 lowercase, 1 number, and 1 special character."
                                             }
                                         })}
-                                        className="w-full pl-10 pr-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+                                        className="w-full pl-10 pr-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out bg-black"
                                     />
                                     <span
                                         onClick={() => setShowPassword(!showPassword)}
@@ -190,7 +190,7 @@ const AuthPage = () => {
                                                 required: "Confirm password is required",
                                                 validate: value => value === watch('password') || "Passwords do not match"
                                             })}
-                                            className="w-full pl-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+                                            className="w-full pl-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out bg-black"
                                         />
                                         <span
                                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -230,7 +230,7 @@ const AuthPage = () => {
                 </div>
 
                 {/* Right Side - Text/Content */}
-                <div className="hidden md:flex w-1/2 bg-cover bg-center bg-no-repeat items-center justify-center" style={{ backgroundImage: "url('/assets/Bg-rightSide.jpg')" }}>
+                <div className="hidden md:flex w-1/2 bg-cover bg-center bg-no-repeat items-center justify-center" style={{ backgroundImage: "url('/assets/Bg-rightSide.png')" }}>
 
                     <div className="relative text-white text-center p-6">
                         <h1 className="text-4xl font-bold mb-5 animate-pulse">Welcome to the iNotebook</h1>

@@ -75,13 +75,18 @@ const Navbar = () => {
                 About
               </Link>
             </li>
-            <li className="relative ease-out duration-300 hover:text-blue-500 group px-4 py-2">
-              Contact
-              <div className="absolute left-0 top-full mt-2 p-4 w-64 bg-white text-black border border-gray-200 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <p>Email: sample@example.com</p>
-                <p>Phone: +123 456 7890</p>
-              </div>
+            <li
+              className={`px-4 py-2 ease-out duration-300 ${
+                location.pathname === "/contact"
+                  ? "text-blue-500"
+                  : "hover:text-blue-500"
+              }`}
+            >
+              <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
+                Contact
+              </Link>
             </li>
+            
             {localStorage.getItem("token") && (
               <li className="md:hidden px-4">
                 <button
