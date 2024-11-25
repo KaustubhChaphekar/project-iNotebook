@@ -6,7 +6,10 @@ require('dotenv').config(); // Load environment variables from .env file
 
 connectToMongo();
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000;
+
+const fs = require('fs');
+
 
 const corsOptions = {
   origin: process.env.VITE_FRONTEND_URL || "http://localhost:5173", // Your frontend domain
@@ -24,14 +27,16 @@ app.use(express.json())
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/notes', require('./routes/notes'))
 
+const distPath = path.join(__dirname, 'dist', 'index.html');
+if (!fs.existsSync(distPath)) {
+    console.error('index.html not found at:', distPath);
+} else {
+    console.log('index.html exists at:', distPath);
+}
+
 
 // Serve static files from the dist folder
 app.use(express.static(path.join(__dirname, 'dist')));
-console.log(path.join(__dirname, 'dist', 'index.html'));
-
-console.log('Static files served from:', path.join(__dirname, 'dist'));
-
-
 
 // Catch-all route to serve the index.html for any unknown routes
 app.get('*', (req, res) => {
