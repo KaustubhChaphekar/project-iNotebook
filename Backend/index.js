@@ -6,9 +6,12 @@ require('dotenv').config(); // Load environment variables from .env file
 
 connectToMongo();
 const app = express()
-const port = process.env.PORT || 3000;
+const port = 3000;
 
 const fs = require('fs');
+console.log('Current directory structure:', fs.readdirSync(path.join(__dirname)));
+console.log('Dist directory structure:', fs.readdirSync(path.join(__dirname, 'dist')));
+
 
 
 const corsOptions = {
@@ -33,15 +36,19 @@ if (!fs.existsSync(distPath)) {
 } else {
     console.log('index.html exists at:', distPath);
 }
-
+console.log('Contents of dist directory:', fs.readdirSync(path.join(__dirname, 'dist')));
 
 // Serve static files from the dist folder
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Catch-all route to serve the index.html for any unknown routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  const indexPath = path.join(__dirname, 'dist', 'index.html');
+  console.log('index.html path:', indexPath);
+  res.sendFile(indexPath);
+  console.log('index.html path:', indexPath);
 });
+
 
 // Default route
 app.get('/', (req, res) => {
