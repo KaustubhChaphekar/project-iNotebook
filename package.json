@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --outDir ./Backend/dist && cp static.json ./Backend/dist/",
+    "build": "vite build --outDir ./Backend/dist && npx ncp static.json ./Backend/dist/",
     "lint": "eslint .",
     "preview": "vite preview"
   },
