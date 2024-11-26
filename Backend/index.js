@@ -36,7 +36,7 @@ if (!fs.existsSync(distPath)) {
 } else {
     console.log('index.html exists at:', distPath);
 }
-console.log('Contents of dist directory:', fs.readdirSync(path.join(__dirname, 'dist')));
+
 
 // Serve static files from the dist folder
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -44,9 +44,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 // Catch-all route to serve the index.html for any unknown routes
 app.get('*', (req, res) => {
   const indexPath = path.join(__dirname, 'dist', 'index.html');
-  console.log('index.html path:', indexPath);
   res.sendFile(indexPath);
-  console.log('index.html path:', indexPath);
 });
 
 
