@@ -26,26 +26,28 @@ app.use(cors(corsOptions));
 // Middleware to parse incoming JSON requests
 app.use(express.json())
 
+// Serve static files from the dist folder
+app.use(express.static(path.join(__dirname, 'dist')));
+
 // Routes
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/notes', require('./routes/notes'))
 
 const distPath = path.join(__dirname, 'dist', 'index.html');
 if (!fs.existsSync(distPath)) {
-    console.error('index.html not found at:', distPath);
+  console.error('ERROR: React build files not found. Ensure the `dist` folder exists and contains index.html.');
 } else {
-    console.log('index.html exists at:', distPath);
+  console.log('SUCCESS: React build files found at:', distPath);
 }
-
-
-// Serve static files from the dist folder
-app.use(express.static(path.join(__dirname, 'dist')));
 
 // Catch-all route to serve the index.html for any unknown routes
 app.get('*', (req, res) => {
-  const indexPath = path.join(__dirname, 'dist', 'index.html');
-  res.sendFile(indexPath);
+  if (req.originalUrl.startsWith('/api')) {
+    return res.status(404).send('API route not found');
+  }
+  res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
 });
+
 
 
 // Default route

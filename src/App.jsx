@@ -14,15 +14,19 @@ const Layout = ({ children }) => (
   </>
 );
 
+const useAuth = () => !!localStorage.getItem('token');
+
+
 const ProtectedRoute = ({ element }) => {
-  const isAuthenticated = !!localStorage.getItem('token');
+  const isAuthenticated = useAuth();
   return isAuthenticated ? element : <Navigate to="/login" />;
 };
 
 const AuthRedirect = ({ element }) => {
-  const isAuthenticated = !!localStorage.getItem('token');
+  const isAuthenticated = useAuth();
   return isAuthenticated ? <Navigate to="/home" /> : element;
 };
+
 
 function App() {
   const router = createBrowserRouter([
@@ -51,9 +55,9 @@ function App() {
       element: <Layout><AuthRedirect element={<AuthPage />} /></Layout>,
     },
   ], {
-    basename: import.meta.env.REACT_APP_FRONTEND_URL || '/'
+    basename: import.meta.env.VITE_FRONTEND_URL || '/'
   });
-
+  {console.log("frontend url : " + import.meta.env.VITE_FRONTEND_URL )}
   return (
     <ThemeProvider>
       <NoteState>
